@@ -3,502 +3,44 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IronTunnel PUBG Shop</title>
+<title>IronTunnel - магазин оружия</title>
 <style>
-  /* Твой CSS с небольшими дополнениями для новых элементов */
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #121212;
-    color: #f5f5b8;
-  }
-  header {
-    background: #222;
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    gap: 15px;
-  }
-  header img {
-    width: 40px;
-    height: 40px;
-  }
-  header h1 {
-    flex-grow: 1;
-    font-weight: 700;
-  }
-  button {
-    background: #ffcc00;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 18px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    color: #222;
-    user-select: none;
-    transition: background 0.3s;
-  }
-  button:hover, button:focus {
-    background: #e6b800;
-    outline: none;
-  }
-  #btn-logout {
-    background: #ff6b6b;
-    color: #fff;
-  }
-  #btn-logout:hover {
-    background: #d24343;
-  }
-  #categories {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 20px 0 10px;
-    flex-wrap: wrap;
-  }
-  #categories button.active {
-    background: #ffd633;
-    color: #121212;
-  }
-  #search-container {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  #search {
-    width: 300px;
-    max-width: 90%;
-    padding: 10px 15px;
-    border-radius: 20px;
-    border: none;
-    font-size: 1rem;
-  }
-  #main-content {
-    display: flex;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto 40px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  #weapon-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-    gap: 20px;
-    flex-grow: 2;
-  }
-  .weapon-card {
-    background: #222;
-    border-radius: 15px;
-    padding: 15px 20px;
-    box-shadow: 0 0 8px #ffcc00aa;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    animation: fadeIn 0.7s ease forwards;
-  }
-  .weapon-card h3 {
-    margin-top: 0;
-  }
-  .weapon-card p {
-    flex-grow: 1;
-    font-size: 0.95rem;
-  }
-  .weapon-card .price {
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin: 10px 0;
-  }
-  .weapon-card button {
-    border-radius: 12px;
-    padding: 10px 0;
-    font-weight: 700;
-    font-size: 1rem;
-  }
-  #cart {
-    background: #222;
-    border-radius: 15px;
-    padding: 15px 20px;
-    width: 320px;
-    max-height: 600px;
-    overflow-y: auto;
-    box-shadow: 0 0 10px #ffcc00aa;
-    flex-shrink: 0;
-  }
-  #cart h3 {
-    margin-top: 0;
-    text-align: center;
-  }
-  #cart-items {
-    list-style: none;
-    padding-left: 0;
-    margin: 10px 0;
-  }
-  #cart-items li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #333;
-    margin-bottom: 8px;
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-weight: 600;
-  }
-  #cart-items li button {
-    background: #ff6b6b;
-    color: white;
-    font-weight: 700;
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1rem;
-    line-height: 1;
-    padding: 0;
-    user-select: none;
-  }
-  .total {
-    font-size: 1.2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-top: 12px;
-  }
-  #clear-cart {
-    width: 100%;
-    margin-top: 15px;
-    background: #ff6b6b;
-    color: white;
-    font-weight: 700;
-  }
-  footer {
-    background: #222;
-    padding: 20px 0;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #999966;
-  }
-  .footer-links a {
-    color: #ffcc00;
-    margin: 0 10px;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .footer-links a:hover {
-    text-decoration: underline;
-  }
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(10px);}
-    to {opacity: 1; transform: translateY(0);}
-  }
-
-  /* Модальные окна */
-  #modal-reg, #modal-login, #modal-change-pass, #modal-confirm-purchase {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000a;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  #modal-reg.active, #modal-login.active, #modal-change-pass.active, #modal-confirm-purchase.active {
-    display: flex;
-  }
-  .modal-content {
-    background: #222;
-    padding: 25px 30px;
-    border-radius: 20px;
-    width: 350px;
-    max-width: 90%;
-    box-shadow: 0 0 20px #ffcc00aa;
-    position: relative;
-  }
-  .modal-content h2 {
-    margin-top: 0;
-    color: #ffcc00;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  .modal-content label {
-    display: block;
-    margin: 10px 0 6px;
-  }
-  .modal-content input[type=text],
-  .modal-content input[type=password] {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 12px;
-    border: none;
-    font-size: 1rem;
-  }
-  .modal-content button {
-    margin-top: 20px;
-    width: 100%;
-  }
-  .close-btn {
-    position: absolute;
-    top: 12px;
-    right: 15px;
-    font-size: 1.5rem;
-    color: #fff;
-    cursor: pointer;
-    user-select: none;
-  }
-  .message {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    min-height: 20px;
-    color: #f33;
-    text-align: center;
-  }
-  .message.success {
-    color: #9f9;
-  }
-  #user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  #user-info span {
-    font-weight: 700;
-  }
-  #btn-change-pass {
-    background: #ffd633;
-    color: #222;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.3s;
-  }
-  #btn-change-pass:hover {
-    background: #e6b800;
-  }
-  /* Адаптив */
-  @media (max-width: 720px) {
-    header h1 {
-      font-size: 1.6rem;
-    }
-    #categories button {
-      font-size: 1rem;
-      padding: 12px 20px;
-      min-width: 110px;
-    }
-    #search {
-      font-size: 1rem;
-      padding: 12px 16px;
-    }
-    .weapon-card h3 {
-      font-size: 1.2rem;
-    }
-    .weapon-card p {
-      font-size: 0.95rem;
-    }
-    .weapon-card .price {
-      font-size: 1.05rem;
-    }
-    .weapon-card button {
-      font-size: 1rem;
-      padding: 12px 0;
-      border-radius: 16px;
-    }
-    #cart {
-      width: 100%;
-      max-height: none;
-      margin-top: 32px;
-    }
-    #cart h3 {
-      font-size: 1.3rem;
-    }
-    #clear-cart {
-      font-size: 1.1rem;
-      padding: 14px 0;
-    }
-    #btn-register, #btn-change-pass {
-      font-size: 1rem;
-      padding: 10px 20px;
-    }
-  }
+  /* Добавь сюда свои стили */
 </style>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
 </head>
 <body>
 
-<header>
-  <img src="https://i.imgur.com/rTyW2yL.png" alt="IronTunnel Logo" />
-  <h1>IronTunnel PUBG Shop</h1>
-  <button id="btn-register">Регистрация</button>
-  <button id="btn-login">Вход</button>
-  <div id="user-info" style="display:none;">
-    <span id="username-display"></span>
-    <button id="btn-change-pass" title="Сменить пароль">Сменить пароль</button>
-    <button id="btn-logout">Выйти</button>
-  </div>
-</header>
+<!-- Кнопки для входа/регистрации -->
+<button id="btn-register">Регистрация</button>
+<button id="btn-login">Вход</button>
+<button id="btn-google-login">Войти через Google</button>
 
-<div id="categories" role="tablist" aria-label="Категории оружия">
-  <button data-cat="all" class="active" role="tab" aria-selected="true" tabindex="0">Все</button>
-  <button data-cat="mv" role="tab" aria-selected="false" tabindex="-1">ММВ</button>
-  <button data-cat="sv" role="tab" aria-selected="false" tabindex="-1">СВ</button>
-  <button data-cat="shv" role="tab" aria-selected="false" tabindex="-1">ШВ</button>
-  <button data-cat="dk" role="tab" aria-selected="false" tabindex="-1">ДК</button>
+<div id="user-info" style="display:none;">
+  <span id="username-display"></span>
+  <button id="btn-logout">Выйти</button>
+  <button id="btn-change-pass">Сменить пароль</button>
 </div>
 
-<div id="search-container">
-  <input type="search" id="search" placeholder="Поиск оружия..." aria-label="Поиск по оружию" />
-</div>
-
-<div id="main-content">
-  <div id="weapon-list" aria-live="polite" aria-label="Список оружия">
-    <!-- Карточки оружия здесь -->
-  </div>
-
-  <aside id="cart" aria-label="Корзина покупок" role="region">
-    <h3>Корзина</h3>
-    <ul id="cart-items"></ul>
-    <div class="total">Итого: <span id="cart-total">0</span> ₽</div>
-    <button id="clear-cart" aria-label="Очистить корзину">Очистить корзину</button>
-    <button id="btn-purchase" style="margin-top:12px; background:#ffd633; color:#222; font-weight:700;">Подтвердить покупку</button>
-  </aside>
-</div>
-
-<footer>
-  <p>Связь с нами:</p>
-  <div class="footer-links">
-    <a href="https://t.me/iron_tunnel" target="_blank" rel="noopener noreferrer">Telegram IronTunnel</a>
-    <a href="https://t.me/iron_tunnel_support" target="_blank" rel="noopener noreferrer">Поддержка</a>
-  </div>
-  <p>© 2025 IronTunnel PUBG Shop. Все права защищены.</p>
-</footer>
-
-<!-- Модальное окно регистрации -->
-<div id="modal-reg" role="dialog" aria-modal="true" aria-labelledby="reg-title">
-  <div class="modal-content">
-    <span class="close-btn" title="Закрыть">&times;</span>
-    <h2 id="reg-title">Регистрация</h2>
-    <form id="reg-form" novalidate>
-      <label for="reg-username">Имя пользователя</label>
-      <input type="text" id="reg-username" name="username" required minlength="3" autocomplete="username" />
-      <label for="reg-password">Пароль</label>
-      <input type="password" id="reg-password" name="password" required minlength="6" autocomplete="new-password" />
-      <button type="submit">Зарегистрироваться</button>
-      <div class="message" aria-live="polite"></div>
-    </form>
-  </div>
-</div>
-
-<!-- Модальное окно входа -->
-<div id="modal-login" role="dialog" aria-modal="true" aria-labelledby="login-title">
-  <div class="modal-content">
-    <span class="close-btn" title="Закрыть">&times;</span>
-    <h2 id="login-title">Вход</h2>
-    <form id="login-form" novalidate>
-      <label for="login-username">Имя пользователя</label>
-      <input type="text" id="login-username" name="username" required autocomplete="username" />
-      <label for="login-password">Пароль</label>
-      <input type="password" id="login-password" name="password" required autocomplete="current-password" />
-      <button type="submit">Войти</button>
-      <div class="message" aria-live="polite"></div>
-    </form>
-  </div>
-</div>
-
-<!-- Модальное окно смены пароля -->
-<div id="modal-change-pass" role="dialog" aria-modal="true" aria-labelledby="change-pass-title">
-  <div class="modal-content">
-    <span class="close-btn" title="Закрыть">&times;</span>
-    <h2 id="change-pass-title">Смена пароля</h2>
-    <form id="change-pass-form" novalidate>
-      <label for="old-password">Старый пароль</label>
-      <input type="password" id="old-password" name="old-password" required autocomplete="current-password" />
-      <label for="new-password">Новый пароль</label>
-      <input type="password" id="new-password" name="new-password" required minlength="6" autocomplete="new-password" />
-      <label for="confirm-password">Подтвердите новый пароль</label>
-      <input type="password" id="confirm-password" name="confirm-password" required autocomplete="new-password" />
-      <button type="submit">Изменить пароль</button>
-      <div class="message" aria-live="polite"></div>
-    </form>
-  </div>
-</div>
-
-<!-- Модальное окно подтверждения покупки -->
-<div id="modal-confirm-purchase" role="dialog" aria-modal="true" aria-labelledby="purchase-title">
-  <div class="modal-content">
-    <span class="close-btn" title="Закрыть">&times;</span>
-    <h2 id="purchase-title">Подтверждение покупки</h2>
-    <p>Вы действительно хотите оформить заказ?</p>
-    <button id="confirm-buy">Да, купить</button>
-    <button id="cancel-buy" style="margin-left:10px; background:#ff6b6b; color:#fff;">Отмена</button>
-  </div>
-</div>
+<!-- Остальной твой HTML... -->
 
 <script>
-  // ==== Данные оружия ====
-  const weapons = [
-    { id: 1, name: "АК-47", category: "mv", desc: "Автоматический карабин", price: 5000 },
-    { id: 2, name: "M24", category: "sv", desc: "Снайперская винтовка", price: 8000 },
-    { id: 3, name: "UMP45", category: "shv", desc: "Пистолет-пулемет", price: 3500 },
-    { id: 4, name: "M249", category: "dk", desc: "Дробовик", price: 9500 },
-    { id: 5, name: "Kar98k", category: "sv", desc: "Снайперская винтовка", price: 7800 },
-    { id: 6, name: "Groza", category: "mv", desc: "Автомат с высоким уроном", price: 6500 },
-    { id: 7, name: "Vector", category: "shv", desc: "Пистолет-пулемет с большой скорострельностью", price: 4000 },
-    { id: 8, name: "S1897", category: "dk", desc: "Дробовик с высокой точностью", price: 7000 },
-    // Добавь свои оружия здесь
-  ];
-
-  // ==== Состояния ====
+  // Твой существующий код...
   let cart = [];
-  let filteredCategory = "all";
+  let loggedUser = null;
+  let weapons = [
+    // твой список оружия
+  ];
+  let filteredCategory = null;
   let searchTerm = "";
-  let loggedUser = null; // {username: 'name', password: 'hash'}
 
-  // ==== Вспомогательные функции ====
-  // Рендер оружия
-  function renderWeapons() {
-    const list = document.getElementById("weapon-list");
-    list.innerHTML = "";
-
-    const filtered = weapons.filter(w => {
-      const matchCat = filteredCategory === "all" || w.category === filteredCategory;
-      const matchSearch = w.name.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchCat && matchSearch;
-    });
-
-    if (filtered.length === 0) {
-      list.innerHTML = "<p style='text-align:center; grid-column:1/-1;'>Оружие не найдено.</p>";
-      return;
-    }
-
-    filtered.forEach(w => {
-      const card = document.createElement("div");
-      card.className = "weapon-card";
-      card.setAttribute("tabindex", "0");
-      card.innerHTML = `
-        <h3>${w.name}</h3>
-        <p>${w.desc}</p>
-        <div class="price">${w.price} ₽</div>
-        <button aria-label="Добавить ${w.name} в корзину" data-id="${w.id}">Купить</button>
-      `;
-      list.appendChild(card);
-    });
-  }
-
-  // Рендер корзины
   function renderCart() {
     const cartItems = document.getElementById("cart-items");
     cartItems.innerHTML = "";
-
-    if (cart.length === 0) {
-      cartItems.innerHTML = "<li>Корзина пуста</li>";
-      document.getElementById("cart-total").textContent = "0";
-      return;
-    }
-
     let total = 0;
     cart.forEach(item => {
       const weapon = weapons.find(w => w.id === item.id);
@@ -519,7 +61,6 @@
     document.getElementById("cart-total").textContent = total;
   }
 
-  // Добавить в корзину
   function addToCart(id) {
     const item = cart.find(c => c.id === id);
     if (item) {
@@ -531,14 +72,12 @@
     renderCart();
   }
 
-  // Удалить из корзины
   function removeFromCart(id) {
     cart = cart.filter(c => c.id !== id);
     saveCart();
     renderCart();
   }
 
-  // Очистить корзину
   function clearCart() {
     if (!loggedUser) {
       alert("Пожалуйста, войдите в аккаунт, чтобы очистить корзину.");
@@ -549,14 +88,12 @@
     renderCart();
   }
 
-  // Сохранить корзину в localStorage (привязана к пользователю)
   function saveCart() {
     if (loggedUser) {
       localStorage.setItem(`cart_${loggedUser.username}`, JSON.stringify(cart));
     }
   }
 
-  // Загрузить корзину из localStorage
   function loadCart() {
     if (loggedUser) {
       const saved = localStorage.getItem(`cart_${loggedUser.username}`);
@@ -571,9 +108,6 @@
     renderCart();
   }
 
-  // Сохранение пользователей
-  // Структура: users = {username1: hashedPass1, username2: hashedPass2}
-  // Для упрощения без хэширования, пароль хранится в открытом виде (небезопасно!)
   function saveUsers(users) {
     localStorage.setItem("users", JSON.stringify(users));
   }
@@ -582,7 +116,6 @@
     return users ? JSON.parse(users) : {};
   }
 
-  // Функция для авторизации
   function login(username, password) {
     const users = loadUsers();
     if (users[username] && users[username] === password) {
@@ -595,7 +128,6 @@
     return false;
   }
 
-  // Функция для выхода
   function logout() {
     loggedUser = null;
     localStorage.removeItem("loggedUser");
@@ -604,18 +136,16 @@
     updateUIForLogout();
   }
 
-  // Функция регистрации
   function register(username, password) {
     const users = loadUsers();
     if (users[username]) {
-      return false; // пользователь существует
+      return false;
     }
     users[username] = password;
     saveUsers(users);
     return true;
   }
 
-  // Проверка текущего пользователя при загрузке страницы
   function checkLoggedUser() {
     const saved = localStorage.getItem("loggedUser");
     if (saved) {
@@ -628,24 +158,23 @@
     }
   }
 
-  // Обновить UI при логине
   function updateUIForLogin() {
     document.getElementById("btn-register").style.display = "none";
     document.getElementById("btn-login").style.display = "none";
+    document.getElementById("btn-google-login").style.display = "none";
     document.getElementById("user-info").style.display = "flex";
     document.getElementById("username-display").textContent = loggedUser.username;
   }
 
-  // Обновить UI при логауте
   function updateUIForLogout() {
     document.getElementById("btn-register").style.display = "inline-block";
     document.getElementById("btn-login").style.display = "inline-block";
+    document.getElementById("btn-google-login").style.display = "inline-block";
     document.getElementById("user-info").style.display = "none";
     cart = [];
     renderCart();
   }
 
-  // Смена пароля
   function changePassword(oldPass, newPass) {
     if (!loggedUser) return false;
     if (loggedUser.password !== oldPass) return false;
@@ -657,238 +186,60 @@
     return true;
   }
 
+  // ==== Firebase Google Auth добавлен сюда ====
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDyMkuK1bt8ikMOz5AbauQb6T5L07REYVY",
+    authDomain: "irontunnel-f0f72.firebaseapp.com",
+    projectId: "irontunnel-f0f72",
+    storageBucket: "irontunnel-f0f72.appspot.com",
+    messagingSenderId: "1081872652770",
+    appId: "1:1081872652770:web:916a9303a9f1f0cfe401bb",
+    measurementId: "G-3CZ8TX2Y4F"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then(result => {
+        const user = result.user;
+        const username = user.email.split('@')[0];
+        const users = loadUsers();
+
+        // Если пользователь через Google — добавляем без пароля
+        if (!users[username]) {
+          users[username] = "";
+          saveUsers(users);
+        }
+
+        loggedUser = { username, password: "" };
+        localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+
+        loadCart();
+        updateUIForLogin();
+        alert('Привет, ' + user.displayName);
+      })
+      .catch(error => {
+        alert('Ошибка: ' + error.message);
+      });
+  }
+
   // ==== Обработчики ====
 
-  // При загрузке страницы
   window.addEventListener("DOMContentLoaded", () => {
-    renderWeapons();
+    // Здесь вызов renderWeapons(), checkLoggedUser() и прочего твоего кода
     checkLoggedUser();
 
-    // Категории
-    const categoryButtons = document.querySelectorAll("#categories button");
-    categoryButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        categoryButtons.forEach(b => {
-          b.classList.remove("active");
-          b.setAttribute("aria-selected", "false");
-          b.setAttribute("tabindex", "-1");
-        });
-        btn.classList.add("active");
-        btn.setAttribute("aria-selected", "true");
-        btn.setAttribute("tabindex", "0");
-        filteredCategory = btn.dataset.cat;
-        renderWeapons();
-      });
-    });
+    // Кнопка входа через Google
+    document.getElementById("btn-google-login").addEventListener("click", signInWithGoogle);
 
-    // Поиск
-    const searchInput = document.getElementById("search");
-    searchInput.addEventListener("input", () => {
-      searchTerm = searchInput.value.trim();
-      renderWeapons();
-    });
-
-    // Покупка оружия из списка
-    document.getElementById("weapon-list").addEventListener("click", e => {
-      if (e.target.tagName === "BUTTON") {
-        if (!loggedUser) {
-          alert("Пожалуйста, войдите в аккаунт, чтобы купить оружие.");
-          return;
-        }
-        const id = +e.target.dataset.id;
-        addToCart(id);
-      }
-    });
-
-    // Очистка корзины
-    document.getElementById("clear-cart").addEventListener("click", clearCart);
-
-    // Регистрация - открытие и закрытие модального окна
-    const modalReg = document.getElementById("modal-reg");
-    const btnRegister = document.getElementById("btn-register");
-    btnRegister.addEventListener("click", () => {
-      modalReg.classList.add("active");
-      modalReg.querySelector("input").focus();
-    });
-    modalReg.querySelector(".close-btn").addEventListener("click", () => {
-      closeModal(modalReg);
-    });
-
-    // Регистрация - отправка формы
-    const regForm = document.getElementById("reg-form");
-    regForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const username = regForm.username.value.trim();
-      const password = regForm.password.value.trim();
-      const message = regForm.querySelector(".message");
-
-      if (username.length < 3) {
-        message.textContent = "Имя пользователя должно содержать не менее 3 символов.";
-        message.className = "message";
-        return;
-      }
-      if (password.length < 6) {
-        message.textContent = "Пароль должен содержать не менее 6 символов.";
-        message.className = "message";
-        return;
-      }
-
-      if (register(username, password)) {
-        message.textContent = "Регистрация успешна! Теперь вы можете войти.";
-        message.className = "message success";
-        regForm.reset();
-      } else {
-        message.textContent = "Пользователь с таким именем уже существует.";
-        message.className = "message";
-      }
-    });
-
-    // Вход - открытие и закрытие
-    const modalLogin = document.getElementById("modal-login");
-    const btnLogin = document.getElementById("btn-login");
-    btnLogin.addEventListener("click", () => {
-      modalLogin.classList.add("active");
-      modalLogin.querySelector("input").focus();
-    });
-    modalLogin.querySelector(".close-btn").addEventListener("click", () => {
-      closeModal(modalLogin);
-    });
-
-    // Вход - отправка формы
-    const loginForm = document.getElementById("login-form");
-    loginForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const username = loginForm.username.value.trim();
-      const password = loginForm.password.value.trim();
-      const message = loginForm.querySelector(".message");
-
-      if (login(username, password)) {
-        message.textContent = "";
-        loginForm.reset();
-        closeModal(modalLogin);
-      } else {
-        message.textContent = "Неверное имя пользователя или пароль.";
-      }
-    });
-
-    // Выход
-    document.getElementById("btn-logout").addEventListener("click", () => {
-      logout();
-    });
-
-    // Смена пароля - открытие и закрытие
-    const modalChangePass = document.getElementById("modal-change-pass");
-    const btnChangePass = document.getElementById("btn-change-pass");
-    btnChangePass.addEventListener("click", () => {
-      modalChangePass.classList.add("active");
-      modalChangePass.querySelector("input").focus();
-    });
-    modalChangePass.querySelector(".close-btn").addEventListener("click", () => {
-      closeModal(modalChangePass);
-    });
-
-    // Смена пароля - отправка формы
-    const changePassForm = document.getElementById("change-pass-form");
-    changePassForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const oldPass = changePassForm["old-password"].value.trim();
-      const newPass = changePassForm["new-password"].value.trim();
-      const confirmPass = changePassForm["confirm-password"].value.trim();
-      const message = changePassForm.querySelector(".message");
-
-      if (!oldPass || !newPass || !confirmPass) {
-        message.textContent = "Пожалуйста, заполните все поля.";
-        return;
-      }
-      if (newPass.length < 6) {
-        message.textContent = "Новый пароль должен быть не менее 6 символов.";
-        return;
-      }
-      if (newPass !== confirmPass) {
-        message.textContent = "Пароли не совпадают.";
-        return;
-      }
-      if (changePassword(oldPass, newPass)) {
-        message.textContent = "Пароль успешно изменён!";
-        message.className = "message success";
-        changePassForm.reset();
-      } else {
-        message.textContent = "Неверный старый пароль.";
-        message.className = "message";
-      }
-    });
-
-    // Модальное окно подтверждения покупки
-    const modalConfirm = document.getElementById("modal-confirm-purchase");
-    const btnBuy = document.getElementById("btn-buy");
-    const btnCancelBuy = document.getElementById("cancel-buy");
-    const btnConfirmBuy = document.getElementById("confirm-buy");
-    const closeBtns = document.querySelectorAll(".close-btn");
-
-    btnBuy.addEventListener("click", () => {
-      if (cart.length === 0) {
-        alert("Ваша корзина пуста.");
-        return;
-      }
-      modalConfirm.classList.add("active");
-    });
-
-    btnCancelBuy.addEventListener("click", () => {
-      closeModal(modalConfirm);
-    });
-
-    btnConfirmBuy.addEventListener("click", () => {
-      alert("Спасибо за покупку!");
-      cart = [];
-      saveCart();
-      renderCart();
-      closeModal(modalConfirm);
-    });
-
-    closeBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const modal = btn.closest(".modal");
-        closeModal(modal);
-      });
-    });
-
-    // Закрытие модального окна при клике вне содержимого
-    document.querySelectorAll(".modal").forEach(modal => {
-      modal.addEventListener("click", e => {
-        if (e.target === modal) {
-          closeModal(modal);
-        }
-      });
-    });
-
-    // Сохранение корзины при закрытии страницы
-    window.addEventListener("beforeunload", () => {
-      saveCart();
-    });
-
-    // Переключатель темы
-    const themeToggle = document.getElementById("theme-toggle");
-    themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark-theme");
-      const darkOn = document.body.classList.contains("dark-theme");
-      localStorage.setItem("darkTheme", darkOn ? "1" : "0");
-      themeToggle.textContent = darkOn ? "Светлая тема" : "Темная тема";
-    });
-
-    // Загрузка темы из localStorage
-    const darkThemeStored = localStorage.getItem("darkTheme");
-    if (darkThemeStored === "1") {
-      document.body.classList.add("dark-theme");
-      themeToggle.textContent = "Светлая тема";
-    } else {
-      themeToggle.textContent = "Темная тема";
-    }
+    // Другие обработчики — регистрация, вход, выход, смена пароля и т.п.
+    // Добавь сюда свои обработчики, если надо
   });
 
-  // Закрыть модальное окно
-  function closeModal(modal) {
-    modal.classList.remove("active");
-  }
 </script>
 
 </body>
