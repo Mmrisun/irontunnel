@@ -1,0 +1,139 @@
+/* Основной фон и шрифт */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #111;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+/* Шапка */
+header {
+  background-color: #1b1b1b;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Навигация с категориями */
+nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 1rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  background-color: #222;
+  border-radius: 6px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+nav a:hover,
+nav a.active {
+  background-color: #ffc107;
+  color: #000;
+  transform: scale(1.05);
+}
+
+/* Поле поиска */
+#search {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.5rem;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 5px;
+  border: none;
+  background-color: #222;
+  color: #fff;
+}
+
+/* Список оружия */
+.weapon-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Анимация появления карточек */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Карточка оружия */
+.weapon-card {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  padding: 1rem;
+  width: 240px;
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  animation: fadeInUp 0.5s ease both;
+}
+
+.weapon-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(255,193,7,0.3);
+}
+
+.weapon-card h3 {
+  margin-top: 0;
+}
+
+/* Кнопка "Добавить в корзину" */
+.weapon-card button {
+  background-color: #ffc107;
+  color: #000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 0.5rem;
+}
+
+.weapon-card button:hover {
+  background-color: #ffca28;
+}
+
+/* Корзина */
+#cart {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: #2a2a2a;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Футер */
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: #1b1b1b;
+  color: #aaa;
+}
+
+footer a {
+  color: #ffc107;
+  text-decoration: none;
+}
