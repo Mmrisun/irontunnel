@@ -890,6 +890,272 @@
     modal.classList.remove("active");
   }
 </script>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>IronTunnel - Магазин оружия PUBG</title>
+  <style>
+    /* Здесь твои стили */
+  </style>
+</head>
+<body>
+
+  <!-- Кнопки входа и регистрации -->
+  <button id="btn-register">Регистрация</button>
+  <button id="btn-login">Вход</button>
+  <button id="btn-google-login" onclick="signInWithGoogle()">Войти через Google</button>
+
+  <!-- Инфо о пользователе -->
+  <div id="user-info" style="display:none;">
+    Пользователь: <span id="username-display"></span>
+    <button id="btn-logout">Выйти</button>
+    <button id="btn-change-pass">Сменить пароль</button>
+  </div>
+
+  <!-- Секция корзины -->
+  <ul id="cart-items"></ul>
+  <div>Итого: <span id="cart-total">0</span></div>
+  <button id="clear-cart">Очистить корзину</button>
+  <button id="btn-buy">Купить</button>
+
+  <!-- Модальные окна регистрации, входа, смены пароля, подтверждения покупки -->
+  <!-- ... тут твои модальные окна ... -->
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script>
+    // === Конфиг Firebase ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyMkuK1bt8ikMOz5AbauQb6T5L07REYVY",
+      authDomain: "irontunnel-f0f72.firebaseapp.com",
+      projectId: "irontunnel-f0f72",
+      storageBucket: "irontunnel-f0f72.appspot.com",
+      messagingSenderId: "1081872652770",
+      appId: "1:1081872652770:web:916a9303a9f1f0cfe401bb",
+      measurementId: "G-3CZ8TX2Y4F"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // === Твой исходный код ===
+    let cart = [];
+    let loggedUser = null;
+    let weapons = [
+      // Пример оружия
+      {id: 1, name: "M416", price: 1000},
+      {id: 2, name: "AKM", price: 900},
+      // ...другие оружия...
+    ];
+    let filteredCategory = null;
+    let searchTerm = "";
+
+    function renderCart() {
+      const cartItems = document.getElementById("cart-items");
+      cartItems.innerHTML = "";
+      let total = 0;
+      cart.forEach(item => {
+        const weapon = weapons.find(w => w.id === item.id);
+        total += weapon.price * item.count;
+
+        const li = document.createElement("li");
+        li.textContent = `${weapon.name} × ${item.count}`;
+        const btnRemove = document.createElement("button");
+        btnRemove.setAttribute("aria-label", `Удалить ${weapon.name} из корзины`);
+        btnRemove.textContent = "×";
+        btnRemove.addEventListener("click", () => {
+          removeFromCart(item.id);
+        });
+        li.appendChild(btnRemove);
+        cartItems.appendChild(li);
+      });
+
+      document.getElementById("cart-total").textContent = total;
+    }
+
+    function addToCart(id) {
+      const item = cart.find(c => c.id === id);
+      if (item) {
+        item.count++;
+      } else {
+        cart.push({ id: id, count: 1 });
+      }
+      saveCart();
+      renderCart();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(c => c.id !== id);
+      saveCart();
+      renderCart();
+    }
+
+    function clearCart() {
+      if (!loggedUser) {
+        alert("Пожалуйста, войдите в аккаунт, чтобы очистить корзину.");
+        return;
+      }
+      cart = [];
+      saveCart();
+      renderCart();
+    }
+
+    function saveCart() {
+      if (loggedUser) {
+        const key = `cart_${loggedUser.uid || loggedUser.username}`;
+        localStorage.setItem(key, JSON.stringify(cart));
+      }
+    }
+
+    function loadCart() {
+      if (loggedUser) {
+        const key = `cart_${loggedUser.uid || loggedUser.username}`;
+        const saved = localStorage.getItem(key);
+        if (saved) {
+          cart = JSON.parse(saved);
+        } else {
+          cart = [];
+        }
+      } else {
+        cart = [];
+      }
+      renderCart();
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    function loadUsers() {
+      const users = localStorage.getItem("users");
+      return users ? JSON.parse(users) : {};
+    }
+
+    function login(username, password) {
+      const users = loadUsers();
+      if (users[username] && users[username] === password) {
+        loggedUser = { username, password };
+        localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+        loadCart();
+        updateUIForLogin();
+        return true;
+      }
+      return false;
+    }
+
+    function logout() {
+      if(loggedUser && loggedUser.googleUser){
+        auth.signOut().then(() => {
+          loggedUser = null;
+          localStorage.removeItem("loggedUser");
+          cart = [];
+          renderCart();
+          updateUIForLogout();
+        });
+      } else {
+        loggedUser = null;
+        localStorage.removeItem("loggedUser");
+        cart = [];
+        renderCart();
+        updateUIForLogout();
+      }
+    }
+
+    function register(username, password) {
+      const users = loadUsers();
+      if (users[username]) {
+        return false;
+      }
+      users[username] = password;
+      saveUsers(users);
+      return true;
+    }
+
+    function checkLoggedUser() {
+      const saved = localStorage.getItem("loggedUser");
+      if (saved) {
+        loggedUser = JSON.parse(saved);
+        loadCart();
+        updateUIForLogin();
+      } else {
+        updateUIForLogout();
+        renderCart();
+      }
+    }
+
+    function updateUIForLogin() {
+      document.getElementById("btn-register").style.display = "none";
+      document.getElementById("btn-login").style.display = "none";
+      document.getElementById("btn-google-login").style.display = "none";
+      document.getElementById("user-info").style.display = "flex";
+      document.getElementById("username-display").textContent = loggedUser.username || loggedUser.email;
+    }
+
+    function updateUIForLogout() {
+      document.getElementById("btn-register").style.display = "inline-block";
+      document.getElementById("btn-login").style.display = "inline-block";
+      document.getElementById("btn-google-login").style.display = "inline-block";
+      document.getElementById("user-info").style.display = "none";
+      cart = [];
+      renderCart();
+    }
+
+    function changePassword(oldPass, newPass) {
+      if (!loggedUser || loggedUser.googleUser) return false;
+      if (loggedUser.password !== oldPass) return false;
+      const users = loadUsers();
+      users[loggedUser.username] = newPass;
+      saveUsers(users);
+      loggedUser.password = newPass;
+      localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+      return true;
+    }
+
+    // === Функция входа через Google ===
+    function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(result => {
+          const user = result.user;
+          loggedUser = {
+            username: user.displayName,
+            password: null,
+            googleUser: true,
+            uid: user.uid,
+            email: user.email
+          };
+          localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+          loadCart();
+          updateUIForLogin();
+          alert(`Привет, ${user.displayName}! Вы вошли через Google.`);
+        })
+        .catch(error => {
+          alert('Ошибка входа через Google: ' + error.message);
+        });
+    }
+
+    // === Остальной твой код (например renderWeapons и обработчики) ===
+    function renderWeapons() {
+      // Твоя функция отрисовки оружия (оставь как есть)
+    }
+
+    // === Обработчики ===
+    window.addEventListener("DOMContentLoaded", () => {
+      renderWeapons();
+      checkLoggedUser();
+
+      // Пример для кнопок регистрации и входа - добавь свои обработчики
+      document.getElementById("btn-logout").addEventListener("click", logout);
+
+      // Другие твои обработчики...
+    });
+  </script>
+
+</body>
+</html>
 
 </body>
 </html>
